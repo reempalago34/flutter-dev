@@ -8,7 +8,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// Maneja los tokens JWT (access + refresh) y reintenta una vez con
 /// `POST /auth/refresh` si el access token expiró (30 min).
 class ApiService {
-  static const String baseUrl = 'http://localhost:8000/api/v1';
+  static const String baseUrl = String.fromEnvironment(
+    'API_BASE_URL',
+    defaultValue: 'http://localhost:8000/api/v1',
+  );
 
   // ----------------------------- Tokens ---------------------------------
 
