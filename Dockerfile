@@ -14,6 +14,7 @@ RUN apt-get update \
     && echo "${FLUTTER_ARCHIVE_SHA256}  /tmp/flutter.tar.xz" | sha256sum -c - \
     && tar -xJf /tmp/flutter.tar.xz -C /opt \
     && rm /tmp/flutter.tar.xz \
+    && git config --global --add safe.directory /opt/flutter \
     && flutter config --enable-web
 
 WORKDIR /app
