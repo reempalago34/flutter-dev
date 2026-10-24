@@ -5,6 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../home_screen.dart';
 import '../providers/auth_provider.dart';
 import '../theme.dart';
+import 'forgot_password_screen.dart';
 import 'register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -143,6 +144,20 @@ class _LoginScreenState extends State<LoginScreen> {
                         return null;
                       },
                       onFieldSubmitted: (_) => _login(),
+                    ),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: TextButton(
+                        onPressed: () => Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => const ForgotPasswordScreen(),
+                          ),
+                        ),
+                        child: Text(
+                          '¿Se te olvidó tu contraseña?',
+                          style: DevTheme.body(size: 13, color: DevColors.gold),
+                        ),
+                      ),
                     ),
                     const SizedBox(height: 24),
                     Consumer<AuthProvider>(

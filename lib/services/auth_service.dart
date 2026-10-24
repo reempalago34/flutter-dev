@@ -60,6 +60,28 @@ class VerifyResult {
 }
 
 class AuthService {
+  /// `POST /auth/forgot-password` → envía código de recuperación por email.
+  static Future<Map<String, dynamic>> forgotPassword(String email) async {
+    return await ApiService.postJson(
+      '/auth/forgot-password',
+      body: {'email': email},
+      auth: false,
+    ) as Map<String, dynamic>;
+  }
+
+  /// `POST /auth/reset-password` → valida el código y guarda la nueva clave.
+  static Future<void> resetPassword({
+    required String email,
+    required String code,
+    required String password,
+  }) async {
+    await ApiService.postJson(
+      '/auth/reset-password',
+      body: {'email': email, 'code': code, 'password': password},
+      auth: false,
+    );
+  }
+
   /// `POST /auth/login` → tokens + usuario; guarda el par de tokens.
   static Future<AuthSession> login(String email, String password) async {
     final data = await ApiService.postJson(
