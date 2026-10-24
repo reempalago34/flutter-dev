@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../home_screen.dart';
 import '../providers/auth_provider.dart';
@@ -40,6 +41,28 @@ class _LoginScreenState extends State<LoginScreen> {
     final auth = context.read<AuthProvider>();
     final ok = await auth.loginAsGuest();
     if (ok && mounted) _goHome();
+  }
+
+  Future<void> _downloadApk() async {
+    final uri = Uri.parse('https://app.proyecto.sbs/downloads/DevPlay.apk');
+    try {
+      final opened = await launchUrl(
+        uri,
+        mode: LaunchMode.externalApplication,
+        webOnlyWindowName: '_blank',
+      );
+      if (!opened && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('No se pudo abrir la descarga.')),
+        );
+      }
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('No se pudo abrir la descarga.')),
+        );
+      }
+    }
   }
 
   void _goHome() {
@@ -176,6 +199,22 @@ class _LoginScreenState extends State<LoginScreen> {
                         label: const Text('Entrar como invitado'),
                         style: OutlinedButton.styleFrom(
                           foregroundColor: DevColors.gold,
+                          side: const BorderSide(color: DevColors.border),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8)),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 44,
+                      child: OutlinedButton.icon(
+                        onPressed: _downloadApk,
+                        icon: const Icon(Icons.download_rounded, size: 18),
+                        label: const Text('Descargar app para Android'),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: DevColors.accentCyan,
                           side: const BorderSide(color: DevColors.border),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8)),
