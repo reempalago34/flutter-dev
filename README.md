@@ -1,5 +1,13 @@
 # DevPlay — Frontend Flutter 🎮
 
+## APK para Android
+
+[Descargar DevPlay para Android](downloads/DevPlay.apk)
+
+Este APK de prueba se conecta a `https://apifast.proyecto.sbs/api/v1`. Está
+firmado con una clave de depuración; para publicar en Google Play se necesita
+una clave de firma de producción.
+
 Frontend móvil de **DevPlay** construido con **Flutter**. Reemplaza al
 antiguo frontend de Next.js: la app habla con la **API de FastAPI**, que
 es el único backend.
