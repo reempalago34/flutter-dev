@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../home_screen.dart';
 import '../providers/auth_provider.dart';
 import '../theme.dart';
+import '../widgets/download_options_dialog.dart';
 import 'forgot_password_screen.dart';
 import 'register_screen.dart';
 
@@ -44,28 +44,6 @@ class _LoginScreenState extends State<LoginScreen> {
     if (ok && mounted) _goHome();
   }
 
-  Future<void> _downloadApk() async {
-    final uri = Uri.parse('https://app.proyecto.sbs/downloads/DevPlay.apk');
-    try {
-      final opened = await launchUrl(
-        uri,
-        mode: LaunchMode.externalApplication,
-        webOnlyWindowName: '_blank',
-      );
-      if (!opened && mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('No se pudo abrir la descarga.')),
-        );
-      }
-    } catch (_) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('No se pudo abrir la descarga.')),
-        );
-      }
-    }
-  }
-
   void _goHome() {
     Navigator.of(context).pushAndRemoveUntil(
       MaterialPageRoute(builder: (_) => const HomeScreen()),
@@ -99,21 +77,27 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         border: Border.all(color: DevColors.gold35),
                       ),
-                      child: const Icon(Icons.sports_esports_rounded,
-                          size: 36, color: DevColors.cream),
+                      child: const Icon(
+                        Icons.sports_esports_rounded,
+                        size: 36,
+                        color: DevColors.cream,
+                      ),
                     ),
                     const SizedBox(height: 16),
                     Text('DevPlay', style: DevTheme.display(size: 28)),
                     const SizedBox(height: 8),
-                    Text('Inicia sesión para continuar',
-                        style:
-                            DevTheme.body(size: 14, color: DevColors.mutedFg)),
+                    Text(
+                      'Inicia sesión para continuar',
+                      style: DevTheme.body(size: 14, color: DevColors.mutedFg),
+                    ),
                     const SizedBox(height: 32),
                     TextFormField(
                       controller: _emailController,
                       keyboardType: TextInputType.emailAddress,
                       decoration: _inputDecoration(
-                          'Correo electrónico', Icons.email_outlined),
+                        'Correo electrónico',
+                        Icons.email_outlined,
+                      ),
                       validator: (v) {
                         if (v == null || v.isEmpty) return 'Ingresa tu correo';
                         if (!v.contains('@')) return 'Correo inválido';
@@ -124,19 +108,23 @@ class _LoginScreenState extends State<LoginScreen> {
                     TextFormField(
                       controller: _passwordController,
                       obscureText: _obscurePassword,
-                      decoration: _inputDecoration(
-                              'Contraseña', Icons.lock_outline)
-                          .copyWith(
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                              _obscurePassword
-                                  ? Icons.visibility_off
-                                  : Icons.visibility,
-                              size: 20),
-                          onPressed: () => setState(
-                              () => _obscurePassword = !_obscurePassword),
-                        ),
-                      ),
+                      decoration:
+                          _inputDecoration(
+                            'Contraseña',
+                            Icons.lock_outline,
+                          ).copyWith(
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                _obscurePassword
+                                    ? Icons.visibility_off
+                                    : Icons.visibility,
+                                size: 20,
+                              ),
+                              onPressed: () => setState(
+                                () => _obscurePassword = !_obscurePassword,
+                              ),
+                            ),
+                          ),
                       validator: (v) {
                         if (v == null || v.isEmpty) {
                           return 'Ingresa tu contraseña';
@@ -168,7 +156,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           child: Text(
                             auth.error!,
                             style: DevTheme.body(
-                                size: 13, color: DevColors.destructive),
+                              size: 13,
+                              color: DevColors.destructive,
+                            ),
                             textAlign: TextAlign.center,
                           ),
                         );
@@ -185,20 +175,23 @@ class _LoginScreenState extends State<LoginScreen> {
                               backgroundColor: DevColors.primary,
                               foregroundColor: DevColors.primaryFg,
                               shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8)),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
                             ),
                             child: auth.isLoading
                                 ? const SizedBox(
                                     width: 20,
                                     height: 20,
                                     child: CircularProgressIndicator(
-                                        strokeWidth: 2),
+                                      strokeWidth: 2,
+                                    ),
                                   )
                                 : const Text(
                                     'Iniciar sesión',
                                     style: TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 15),
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 15,
+                                    ),
                                   ),
                           ),
                         );
@@ -216,7 +209,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           foregroundColor: DevColors.gold,
                           side: const BorderSide(color: DevColors.border),
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8)),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
                         ),
                       ),
                     ),
@@ -225,26 +219,28 @@ class _LoginScreenState extends State<LoginScreen> {
                       width: double.infinity,
                       height: 44,
                       child: OutlinedButton.icon(
-                        onPressed: _downloadApk,
+                        onPressed: () => showDownloadOptionsDialog(context),
                         icon: const Icon(Icons.download_rounded, size: 18),
-                        label: const Text('Descargar app para Android'),
+                        label: const Text('Descargar DevPlay'),
                         style: OutlinedButton.styleFrom(
                           foregroundColor: DevColors.accentCyan,
                           side: const BorderSide(color: DevColors.border),
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8)),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
                         ),
                       ),
                     ),
                     const SizedBox(height: 16),
                     TextButton(
                       onPressed: () => Navigator.of(context).push(
-                        MaterialPageRoute(builder: (_) => const RegisterScreen()),
+                        MaterialPageRoute(
+                          builder: (_) => const RegisterScreen(),
+                        ),
                       ),
                       child: Text(
                         '¿No tienes cuenta? Regístrate',
-                        style: DevTheme.body(
-                            size: 14, color: DevColors.gold),
+                        style: DevTheme.body(size: 14, color: DevColors.gold),
                       ),
                     ),
                   ],
