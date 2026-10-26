@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui' show ImageFilter;
 
 import 'package:flutter/material.dart';
@@ -61,11 +62,17 @@ class _HomeScreenState extends State<HomeScreen> {
   final _headerKey = GlobalKey();
   final _tourHelpKey = GlobalKey();
   final _homeScrollController = ScrollController();
+  StreamSubscription<Uri>? _deepLinkSubscription;
+  String? _openingDeepLinkUsername;
 
   @override
   void initState() {
     super.initState();
     _load();
+    _deepLinkSubscription = DevLink.incomingLinks.listen((uri) {
+      final username = DevLink.usernameFrom(uri);
+      if (username != null) _openDeepLink(username);
+    });
     _openDeepLink();
   }
 
@@ -73,24 +80,31 @@ class _HomeScreenState extends State<HomeScreen> {
   ///
   /// Es lo que hace que el enlace copiado desde "Compartir perfil" lleve al
   /// perfil correcto. Si el usuario no existe, se avisa y se sigue en Inicio.
-  Future<void> _openDeepLink() async {
-    final username = DevLink.currentUsername();
+  Future<void> _openDeepLink([String? linkedUsername]) async {
+    final username = linkedUsername ?? await DevLink.initialUsername();
     if (username == null || username.isEmpty) return;
-    final id = await DevLink.resolveUserId(username);
-    if (!mounted) return;
-    if (id == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('No existe el usuario @$username')),
-      );
-      return;
+    if (_openingDeepLinkUsername == username) return;
+    _openingDeepLinkUsername = username;
+    try {
+      final id = await DevLink.resolveUserId(username);
+      if (!mounted) return;
+      if (id == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('No existe el usuario @$username')),
+        );
+        return;
+      }
+      await Navigator.of(context)
+          .push(MaterialPageRoute(builder: (_) => ProfileScreen(userId: id)));
+    } finally {
+      _openingDeepLinkUsername = null;
     }
-    await Navigator.of(context)
-        .push(MaterialPageRoute(builder: (_) => ProfileScreen(userId: id)));
   }
 
   @override
   void dispose() {
     _homeScrollController.dispose();
+    _deepLinkSubscription?.cancel();
     super.dispose();
   }
 

@@ -1,3 +1,8 @@
+import 'dart:async';
+
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
+
 import '../services/api_service.dart';
 
 /// Enlace profundo de DevPlay.
@@ -5,8 +10,40 @@ import '../services/api_service.dart';
 /// El perfil se comparte con una URL `?user=<username>`. Esta clase la
 /// interpreta y la resuelve contra la API real (`GET /users/by-username/{u}`).
 class DevLink {
+  static const MethodChannel _channel = MethodChannel('devplay/deep_links');
+  static final StreamController<Uri> _incomingLinks =
+      StreamController<Uri>.broadcast();
+  static bool _initialized = false;
+
   /// Parámetro de query que lleva el username del perfil.
   static const String userParam = 'user';
+
+  /// Instala el receptor nativo de enlaces entrantes en Android.
+  static void initialize() {
+    if (kIsWeb || _initialized) return;
+    _initialized = true;
+    _channel.setMethodCallHandler((call) async {
+      if (call.method != 'onLink' || call.arguments is! String) return;
+      final uri = Uri.tryParse(call.arguments as String);
+      if (uri != null) _incomingLinks.add(uri);
+    });
+  }
+
+  /// Enlaces recibidos mientras la app ya está abierta.
+  static Stream<Uri> get incomingLinks => _incomingLinks.stream;
+
+  /// Usuario del enlace inicial, leído desde la URL web o el intent Android.
+  static Future<String?> initialUsername() async {
+    if (kIsWeb) return usernameFrom(Uri.base);
+    try {
+      final link = await _channel.invokeMethod<String>('getInitialLink');
+      return link == null ? null : usernameFrom(Uri.parse(link));
+    } on MissingPluginException {
+      return null;
+    } catch (_) {
+      return null;
+    }
+  }
 
   /// Extrae el username de perfil de una URL de DevPlay.
   ///
@@ -34,23 +71,17 @@ class DevLink {
     return null;
   }
 
-  /// Username del perfil de la URL actual del navegador (si lo hay).
-  static String? currentUsername() {
-    final base = Uri.base;
-    return usernameFrom(base);
-  }
-
   /// Construye la URL pública de un perfil.
   static String profileUrl(String username, {String? origin}) {
     final base = origin ?? _currentOrigin();
     return '$base/?$userParam=$username';
   }
 
-  /// Origen del navegador, con reserva si no es http(s) (p. ej. en tests).
+  /// Origen de la web; en Android se usa el dominio público de DevPlay.
   static String _currentOrigin() {
     final uri = Uri.base;
     if (uri.scheme == 'http' || uri.scheme == 'https') return uri.origin;
-    return 'https://devplay.app';
+    return 'https://app.proyecto.sbs';
   }
 
   /// Resuelve el username de un enlace a su id de usuario real.

@@ -5,22 +5,30 @@
 [Descargar DevPlay para Android](downloads/DevPlay.apk)
 
 Este APK de prueba se conecta a `https://apifast.proyecto.sbs/api/v1`. Está
-firmado con una clave de depuración; para publicar en Google Play se necesita
-una clave de firma de producción.
+firmado con una clave de depuración, usa el paquete `com.devplay.mobile` y
+conserva la sesión al actualizarlo con la misma firma. Para publicar en Google
+Play se necesita una clave de firma de producción.
+
+Para reconstruir y reemplazar el APK descargable con la API de producción:
+
+```bash
+./scripts/build-apk.sh
+```
+
+Los enlaces compartidos a perfiles usan `https://app.proyecto.sbs/?user=...`.
+La asociación Android está en `deploy/assetlinks.json` y se publica desde el
+Dockerfile del sitio.
 
 Frontend móvil de **DevPlay** construido con **Flutter**. Reemplaza al
 antiguo frontend de Next.js: la app habla con la **API de FastAPI**, que
 es el único backend.
 
-> ✅ **Flutter SDK instalado (3.47.6, stable)** en `C:\src\flutter`. App
-> generada con `flutter create` (plataformas: web + android). Se corre con
-> `flutter run -d chrome` (web) o se migra a móvil con el Android SDK.
+La misma app Flutter comparte pantallas y flujos entre web y Android. La app
+valida la sesión guardada al abrir, entra al feed cuando sigue vigente y muestra
+el acceso cuando no hay sesión válida.
 
-> 🎨 **Diseño = el de la web** (rama `visual` del backend): paleta oscura
-> "papel, tinta y filetes", fuentes Fraunces/Bitter/JetBrains Mono, glass
-> cards, consola CRT, hero ticker, post cards con like + confeti y dock de
-> crear. Por ahora con datos de ejemplo (`lib/models/post.dart`); las
-> funciones de la API las integra el compañero en otra rama.
+El feed, las publicaciones, perfiles, betas, chat, mensajes directos y
+notificaciones usan los servicios de `lib/services/` contra la API de FastAPI.
 
 ## Arquitectura
 
@@ -69,7 +77,7 @@ Detalles finos (importantes para no fallar):
 
 1. ✅ Backend FastAPI terminado (posts, polls, betas, chat, dm, notificaciones…)
 2. ✅ Visual Next.js conservado en la rama `visual` del repo backend (`fastapi_devplay-main`) + respaldo en `_backup_nextjs_frontend`
-3. ⬜ Este repo: construir la app Flutter consumiendo `/api/v1`
+3. ✅ Este repo: app Flutter para web y Android consumiendo `/api/v1`
 4. ⬜ Más adelante: **juntar backend y frontend** (deploy conjunto)
 5. ⬜ Las funciones de la API que faltan las hace el compañero en otra rama
 

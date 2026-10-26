@@ -5,8 +5,11 @@ import 'providers/auth_provider.dart';
 import 'screens/login_screen.dart';
 import 'home_screen.dart';
 import 'theme.dart';
+import 'utils/dev_link.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  DevLink.initialize();
   // Los plugins web (file_picker para elegir imágenes, video_player,
   // pointer_interceptor...) se registran solos: Flutter genera el registrant
   // y lo invoca desde el entrypoint web.

@@ -27,6 +27,8 @@ RUN flutter build web --release --dart-define=API_BASE_URL=${API_BASE_URL}
 FROM nginx:1.29-alpine
 COPY deploy/nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=build /app/build/web /usr/share/nginx/html
+RUN mkdir -p /usr/share/nginx/html/.well-known
+COPY deploy/assetlinks.json /usr/share/nginx/html/.well-known/assetlinks.json
 COPY --from=build /app/downloads/DevPlay.apk /usr/share/nginx/html/downloads/DevPlay.apk
 EXPOSE 8080
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \

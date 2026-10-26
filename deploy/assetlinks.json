@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.devplay.mobile",
+      "sha256_cert_fingerprints": [
+        "AC:C8:AF:5A:32:F2:FC:DC:71:FA:33:1B:62:72:FE:4C:B0:E7:6D:7F:7F:FC:E6:E3:0E:81:B2:67:80:A4:D7:31"
+      ]
+    }
+  }
+]
