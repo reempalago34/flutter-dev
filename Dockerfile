@@ -30,6 +30,7 @@ COPY --from=build /app/build/web /usr/share/nginx/html
 RUN mkdir -p /usr/share/nginx/html/.well-known
 COPY deploy/assetlinks.json /usr/share/nginx/html/.well-known/assetlinks.json
 COPY --from=build /app/downloads/DevPlay.apk /usr/share/nginx/html/downloads/DevPlay.apk
+COPY --from=build /app/downloads/DevPlay-linux-x64.tar.gz /usr/share/nginx/html/downloads/DevPlay-linux-x64.tar.gz
 EXPOSE 8080
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
     CMD wget -q -O /dev/null http://127.0.0.1:8080/healthz || exit 1

@@ -5,6 +5,7 @@ import '../../models/navigation.dart';
 import '../../providers/auth_provider.dart';
 import '../../theme.dart';
 import 'avatar.dart';
+import 'download_menu_button.dart';
 
 /// Sidebar lateral para desktop (>= 800px) — equivalente al `Sidebar` de Next.js.
 ///
@@ -25,6 +26,7 @@ class DevSidebar extends StatefulWidget {
   final VoidCallback? onOpenStore;
   final VoidCallback? onOpenReports;
   final VoidCallback? onShowAbout;
+  final VoidCallback? onDownloadTap;
 
   /// Abre el perfil del usuario en sesión (tarjeta del pie del sidebar).
   final VoidCallback? onProfileTap;
@@ -45,6 +47,7 @@ class DevSidebar extends StatefulWidget {
     this.onOpenStore,
     this.onOpenReports,
     this.onShowAbout,
+    this.onDownloadTap,
     this.onProfileTap,
   });
 
@@ -99,6 +102,13 @@ class _DevSidebarState extends State<DevSidebar> {
                       if (!_sidebarCompact)
                         _buildSectionTitle('Menú principal'),
                       _buildMainNav(canCreate),
+
+                      const SizedBox(height: 12),
+                      if (!_sidebarCompact) _buildSectionTitle('Descargas'),
+                      DownloadMenuButton(
+                        compact: _sidebarCompact,
+                        onTap: widget.onDownloadTap ?? () {},
+                      ),
 
                       // Sección 2: Crear contenido
                       if (canCreate) ...[

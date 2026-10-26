@@ -8,6 +8,7 @@ import '../../providers/auth_provider.dart';
 import '../../theme.dart';
 import 'avatar.dart';
 import 'animations.dart';
+import 'download_menu_button.dart';
 
 /// Drawer lateral para móvil (< 800px) — equivalente al `MobileDrawer` de Next.js.
 ///
@@ -32,6 +33,7 @@ class DevDrawer extends StatefulWidget {
   final VoidCallback? onOpenStore;
   final VoidCallback? onOpenReports;
   final VoidCallback? onShowAbout;
+  final VoidCallback? onDownloadTap;
 
   const DevDrawer({
     super.key,
@@ -49,6 +51,7 @@ class DevDrawer extends StatefulWidget {
     this.onOpenStore,
     this.onOpenReports,
     this.onShowAbout,
+    this.onDownloadTap,
   });
 
   @override
@@ -157,6 +160,16 @@ class _DevDrawerState extends State<DevDrawer>
                                     _buildSectionTitle('Navegación'),
                                     const SizedBox(height: 8),
                                     _buildMainNav(canCreate),
+
+                                    const SizedBox(height: 18),
+                                    _buildSectionTitle('Descargas'),
+                                    const SizedBox(height: 8),
+                                    DownloadMenuButton(
+                                      onTap: () {
+                                        widget.onClose();
+                                        widget.onDownloadTap?.call();
+                                      },
+                                    ),
 
                                     // Ayuda
                                     if (!_hideHelp) ...[

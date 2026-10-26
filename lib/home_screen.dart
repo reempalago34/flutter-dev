@@ -25,6 +25,7 @@ import '../utils/dev_link.dart';
 import '../widgets/avatar.dart';
 import '../widgets/beta_compose_sheet.dart';
 import '../widgets/drawer.dart';
+import '../widgets/download_options_dialog.dart';
 import '../widgets/header.dart';
 import '../widgets/hero_3d_shapes.dart';
 import '../widgets/hero_video.dart';
@@ -238,6 +239,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _openDrawer() => setState(() => _drawerOpen = true);
   void _closeDrawer() => setState(() => _drawerOpen = false);
+
+  void _showDownloads() => showDownloadOptionsDialog(context);
 
   Future<void> _onCreatePost() async {
     await _CreateDock(onCreated: _load)._open(context);
@@ -596,6 +599,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         onOpenStore: _openStore,
                         onOpenReports: _openReports,
                         onShowAbout: _showAbout,
+                        onDownloadTap: _showDownloads,
                       ),
                       // Contenido principal con header global
                       Expanded(
@@ -649,6 +653,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     onOpenStore: _openStore,
                     onOpenReports: _openReports,
                     onShowAbout: _showAbout,
+                    onDownloadTap: _showDownloads,
                   ),
               ],
             ),
