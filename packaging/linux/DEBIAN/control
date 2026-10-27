@@ -1,0 +1,11 @@
+Package: devplay
+Version: 1.0.0
+Section: games
+Priority: optional
+Architecture: amd64
+Maintainer: DevPlay Team <devplay@proyecto.sbs>
+Description: Plataforma de desarrollo y juegos indie
+ DevPlay es una plataforma para descubrir, crear y jugar proyectos
+ independientes. Incluye feed de la comunidad, betas, chat mundial y
+ publicación de contenido.
+Homepage: https://app.proyecto.sbs

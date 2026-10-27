@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=DevPlay
+Comment=Plataforma de desarrollo y juegos indie
+Exec=devplay
+Icon=devplay
+Type=Application
+Categories=Game;Development;
+Terminal=false
