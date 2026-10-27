@@ -1,0 +1,5 @@
+.git
+build/
+dist/
+.dart_tool/
+packaging/linux/usr/lib/

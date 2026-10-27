@@ -29,3 +29,5 @@ Thumbs.db
 *.prof
 *.red
 migrate_working_dir/
+packaging/linux/usr/lib/
+dist/
