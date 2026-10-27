@@ -16,6 +16,7 @@ class DevHeader extends StatelessWidget {
   final VoidCallback? onNotificationsTap;
   final VoidCallback? onLogout;
   final VoidCallback? onMenuTap;
+  final VoidCallback? onDownloadTap;
   final ValueChanged<String>? onSearch;
   final int unreadCount;
   final bool showMenu;
@@ -25,6 +26,7 @@ class DevHeader extends StatelessWidget {
     this.onNotificationsTap,
     this.onLogout,
     this.onMenuTap,
+    this.onDownloadTap,
     this.onSearch,
     this.unreadCount = 0,
     this.showMenu = true,
@@ -134,6 +136,12 @@ class DevHeader extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 8),
+          // Botón Descargar — visible desde el header para cualquier usuario
+          if (onDownloadTap != null) ...[
+            const SizedBox(width: 8),
+            _HeaderDownloadButton(onTap: onDownloadTap!),
+            const SizedBox(width: 8),
+          ],
           // Campana con badge de no leidas
           InkWell(
             onTap: onNotificationsTap,
@@ -183,6 +191,58 @@ class DevHeader extends StatelessWidget {
             },
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// Botón "Descargar" del header superior. Siempre visible para cualquier
+/// usuario (logueado o invitado). Al tocarlo se abre el diálogo con las
+/// versiones disponibles (Android, Linux).
+class _HeaderDownloadButton extends StatelessWidget {
+  final VoidCallback onTap;
+
+  const _HeaderDownloadButton({required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Tooltip(
+      message: 'Descargar DevPlay',
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(8),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+            decoration: BoxDecoration(
+              color: DevColors.accentCyan.withValues(alpha: 0.10),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                color: DevColors.accentCyan.withValues(alpha: 0.35),
+              ),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(
+                  Icons.download_rounded,
+                  size: 18,
+                  color: DevColors.accentCyan,
+                ),
+                const SizedBox(width: 6),
+                Text(
+                  'Descargar',
+                  style: DevTheme.body(
+                    size: 12.5,
+                    w: FontWeight.w700,
+                    color: DevColors.accentCyan,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
