@@ -4,8 +4,10 @@ import 'package:url_launcher/url_launcher.dart';
 import '../theme.dart';
 
 const _androidDownloadUrl = 'https://app.proyecto.sbs/downloads/DevPlay.apk';
-const _linuxDownloadUrl =
+const _linuxDebDownloadUrl =
     'https://app.proyecto.sbs/downloads/DevPlay-amd64.deb';
+const _linuxTarGzDownloadUrl =
+    'https://app.proyecto.sbs/downloads/DevPlay-linux-x64.tar.gz';
 
 Future<void> showDownloadOptionsDialog(BuildContext context) {
   return showDialog<void>(
@@ -67,10 +69,18 @@ class DownloadOptionsDialog extends StatelessWidget {
             const SizedBox(height: 10),
             _DownloadOption(
               icon: Icons.computer_rounded,
-              title: 'Linux',
-              description: 'Linux de 64 bits · instalador .deb',
+              title: 'Linux (.deb)',
+              description: 'Instalador para Ubuntu, Debian y derivados · doble clic para instalar',
               color: DevColors.accentCyan,
-              onTap: () => _download(context, _linuxDownloadUrl),
+              onTap: () => _download(context, _linuxDebDownloadUrl),
+            ),
+            const SizedBox(height: 10),
+            _DownloadOption(
+              icon: Icons.computer_rounded,
+              title: 'Linux (.tar.gz)',
+              description: 'Paquete portable · extraer y ejecutar',
+              color: DevColors.accentCyan,
+              onTap: () => _download(context, _linuxTarGzDownloadUrl),
             ),
           ],
         ),
